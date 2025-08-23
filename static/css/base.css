@@ -25,3 +25,25 @@ h1, h2, h3, h4, h5, h6, .big-text {
 .navbar-brand {
     color: var(--raisin-black) !important;
 }
+
+
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+
+::-webkit-scrollbar-track {
+  background: var(--ucla-blue-200); 
+}
+
+
+::-webkit-scrollbar-thumb {
+  background: var(--raisin-black-700);
+  border: 2px solid var(--ucla-blue-200); 
+}
+
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ucla-blue-500);
+}
