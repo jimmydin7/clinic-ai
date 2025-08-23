@@ -19,7 +19,7 @@
             Track your health with machine learning tests for <strong>cancer, diabetes, and mental health</strong>.<br>
             Create an account, view past results, and compare progress with interactive charts.
          </p>
-         <a href="#" class="btn btn-lg" 
+         <a href="#cancer" class="btn btn-lg" 
             style="background: #2fdfb6; color: #152337; font-weight: bold; box-shadow: 2px 4px 10px rgba(0,0,0,0.4); margin-top: 20px;">
          View Health Tests
          </a>
@@ -58,10 +58,50 @@
   </div>
 </section>
 
-<section>
-diabetes
+<section id="diabetes" style="background: linear-gradient(135deg, var(--powder-blue-700), var(--powder-blue-900)); padding: 100px 0;">
+  <div class="container">
+    <div class="row align-items-center">
+
+      
+      <div class="col-lg-6">
+        <h2 style="color: var(--delft-blue-400); font-weight: 800; font-size: 3rem; text-shadow: 1px 1px 6px rgba(0,0,0,0.3);">
+          Diabetes Prediction
+        </h2>
+        <p class="mt-3" style="color: var(--raisin-black-500); font-size: 1.2rem; line-height: 1.6;">
+          Answer a bunch of questions about your <b>eating habits</b>, and the <b>ML</b> model I trained will return the chance of you having diabetes!
+        </p>
+        <a href="/diabetes-test" class="btn btn-lg mt-4"
+           style="background: var(--mint-green-300); color: var(--raisin-black-500); font-weight: bold; box-shadow: 2px 4px 12px rgba(0,0,0,0.4);">
+          Take Diabetes Test
+        </a>
+      </div>
+
+      <div class="col-lg-6 text-center mb-4 mb-lg-0">
+      </div>
+    </div>
+  </div>
 </section>
-<section>
-mental health
+
+<section id="mental-health" style="background: linear-gradient(135deg, var(--powder-blue-700), var(--powder-blue-900)); padding: 100px 0;">
+  <div class="container">
+    <div class="row align-items-center">
+
+      <div class="col-lg-6 text-center mb-4 mb-lg-0">
+      </div>
+      <div class="col-lg-6">
+        <h2 style="color: var(--delft-blue-400); font-weight: 800; font-size: 3rem; text-shadow: 1px 1px 6px rgba(0,0,0,0.3);">
+          Mental Health
+        </h2>
+        <p class="mt-3" style="color: var(--raisin-black-500); font-size: 1.2rem; line-height: 1.6;">
+          Answer some <b>psycological</b> questions, get an <b>assessment of your mental health</b>
+        </p>
+        <a href="/mental-health-test" class="btn btn-lg mt-4"
+           style="background: var(--mint-green-300); color: var(--raisin-black-500); font-weight: bold; box-shadow: 2px 4px 12px rgba(0,0,0,0.4);">
+          Take Mental Health
+        </a>
+      </div>
+    </div>
+  </div>
 </section>
+
 {% endblock %}
