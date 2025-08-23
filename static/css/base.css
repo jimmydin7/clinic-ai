@@ -1,0 +1,22 @@
+body {
+    background-color: var(--powder-blue-800);
+    color: var(--mint-green);
+    font-family: "Comic Sans MS"
+}
+
+.navbar {
+    background-color: var(--raisin-black-700);
+}
+
+.nav-link {
+    color: var(--ucla-blue) !important;
+}
+
+.nav-link.active {
+    font-weight: bold;
+    color: var(--powder-blrgba(157, 123, 123, 0.5));
+}
+
+.navbar-brand {
+    color: var(--raisin-black) !important;
+}
