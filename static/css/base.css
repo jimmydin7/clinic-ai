@@ -1,8 +1,13 @@
 body {
     background-color: var(--powder-blue-800);
     color: var(--mint-green);
-    font-family: "Comic Sans MS"
+    font-family: "Comic Sans MS", sans-serif;
 }
+
+h1, h2, h3, h4, h5, h6, .big-text {
+    font-family: "Poppins", sans-serif;
+}
+
 
 .navbar {
     background-color: var(--raisin-black-700);
