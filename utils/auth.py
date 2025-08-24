@@ -13,8 +13,14 @@ class DBController:
                 json.dump({"users": []}, f)
 
     def _load_db(self):
-        with open(self.db_path, "r") as f:
-            return json.load(f)
+        try:
+            with open(self.db_path, "r") as f:
+                return json.load(f)
+        except (json.JSONDecodeError, FileNotFoundError):
+            data = {"users": []}
+            self._save_db(data)
+            return data
+
 
     def _save_db(self, data):
         with open(self.db_path, "w") as f:
