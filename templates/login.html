@@ -3,6 +3,9 @@
 {% block title %}Clinic AI - Login{% endblock %}
 
 {% block content %}
+{% if session['username'] %}
+<script>window.location.href = '/dashboard';</script>
+{% else %}
 <section>
   <div class="container-fluid vh-100 d-flex align-items-center" 
        style="background: linear-gradient(135deg, #152337, #23395b); overflow: hidden;">
@@ -22,14 +25,14 @@
         <div class="card shadow-lg p-4" style="width: 100%; max-width: 400px; border-radius: 16px;">
           <h3 class="mb-4 text-center" style="color:#152337; font-weight: 700;">Login</h3>
           <form method="POST" action="/login">
-                        <div class="mb-3">
-  <label for="username" class="form-label" style="color:#23395b;">Username</label>
-  <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
-</div>
-<div class="mb-3">
-  <label for="password" class="form-label" style="color:#23395b;">Password</label>
-  <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
-</div>
+            <div class="mb-3">
+              <label for="username" class="form-label" style="color:#23395b;">Username</label>
+              <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label" style="color:#23395b;">Password</label>
+              <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+            </div>
             <button type="submit" class="btn w-100 mt-3" 
                     style="background: #2fdfb6; color: #152337; font-weight: bold; border-radius: 8px;">
               Log In
@@ -44,4 +47,5 @@
     </div>
   </div>
 </section>
+{% endif %}
 {% endblock %}
