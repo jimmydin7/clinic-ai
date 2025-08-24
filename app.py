@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from functools import wraps
 from utils import auth
+from utils.images import images
 
 app = Flask(__name__)
 app.secret_key = "dont-be-stupid-and-change-this-in-prod"
@@ -19,7 +20,7 @@ def login_required(f):
 
 @app.route('/')
 def index():
-    return render_template('index.html', session=session)
+    return render_template('index.html', session=session, images=images)
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
