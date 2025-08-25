@@ -149,7 +149,7 @@ def cancer_summary():
         flash("No cancer assessment data found. Please start the assessment.", "warning")
         return redirect(url_for('cancer_test'))
     
-    # Prepare model input
+
     model_input = {}
     for q in cancer_questions:
         name = q['name']
@@ -160,22 +160,21 @@ def cancer_summary():
             val = float(val) if '.' in str(val) else int(val)
         model_input[name] = val
     
-    # Calculate BMI
+
     weight = float(model_input.pop('Weight'))
     height_cm = float(model_input.pop('Height'))
     height_m = height_cm / 100.0
     bmi = weight / (height_m ** 2)
     model_input['BMI'] = bmi
     
-    # Order features as expected by the model
+
     feature_order = ['Age', 'Gender', 'BMI', 'Smoking', 'GeneticRisk', 'PhysicalActivity', 'AlcoholIntake', 'CancerHistory']
     ordered_input = {k: model_input[k] for k in feature_order}
     df = pd.DataFrame([ordered_input])
-    
-    # Get prediction
+
     probability = cancer_predict(df)
     
-    # Determine risk level and color
+
     if probability is not None:
         if probability >= 80:
             color = 'red-600'
@@ -190,14 +189,13 @@ def cancer_summary():
         color = 'green-600'
         result = "Low risk: Model predicts no cancer."
     
-    # Calculate age group for comparison
+
     age = model_input['Age']
     age_group_start = (age // 10) * 10
     age_group_end = age_group_start + 9
     
-    # For now, we'll use a simple average since we don't have the cancer_db.csv
-    # In a real implementation, you'd load this from your dataset
-    avg_probability = 15.0  # Placeholder value
+
+    avg_probability = 15.0 #demo
     
     return render_template('cancer-summary.html', 
                          answers=answers, 
