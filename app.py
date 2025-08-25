@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from functools import wraps
 from utils import auth
 from utils.images import images
+from datetime import datetime, date
 
 app = Flask(__name__)
 app.secret_key = "dont-be-stupid-and-change-this-in-prod"
@@ -33,6 +34,10 @@ def login():
 
         if dbHandler.validate_user(username, password):
             session['username'] = username
+
+            user = dbHandler.get_user(username)
+            if user and 'age' in user:
+                session['age'] = user['age']
             flash(f"Welcome, {username}!", "success")
             return redirect(url_for("dashboard"))
         else:
@@ -49,8 +54,19 @@ def register():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
+        birthday_str = request.form.get("birthday")
 
-        if dbHandler.add_user(username, password):
+        age = None
+        if birthday_str:
+            try:
+                birth_date = datetime.strptime(birthday_str, "%Y-%m-%d").date()
+                today = date.today()
+                age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
+            except ValueError:
+                flash("Invalid birthday format.", "danger")
+                return redirect(url_for("register"))
+
+        if dbHandler.add_user(username, password, birthday=birthday_str, age=age):
             flash("Account created successfully! Please log in.", "success")
             return redirect(url_for("login"))
         else:
@@ -64,6 +80,7 @@ def logout():
     if 'username' in session:
         username = session['username']
         session.pop('username', None)
+        session.pop('age', None)
         flash(f"Goodbye, {username}! You have been logged out.", "info")
     return redirect(url_for('index'))
 

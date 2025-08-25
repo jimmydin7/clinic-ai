@@ -26,14 +26,20 @@ class DBController:
         with open(self.db_path, "w") as f:
             json.dump(data, f, indent=4)
 
-    def add_user(self, username, password):
+    def add_user(self, username, password, birthday=None, age=None):
         data = self._load_db()
 
         if any(u["username"] == username for u in data["users"]):
             return False 
         
 
-        data["users"].append({"username": username, "password": password})
+        user_record = {"username": username, "password": password}
+        if birthday is not None:
+            user_record["birthday"] = birthday
+        if age is not None:
+            user_record["age"] = age
+
+        data["users"].append(user_record)
         self._save_db(data)
         return True
 
@@ -60,3 +66,10 @@ class DBController:
     def list_users(self):
         data = self._load_db()
         return [u["username"] for u in data["users"]]
+
+    def get_user(self, username):
+        data = self._load_db()
+        for user in data.get("users", []):
+            if user.get("username") == username:
+                return user
+        return None

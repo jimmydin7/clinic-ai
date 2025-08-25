@@ -9,6 +9,11 @@
                     <h2 class="mb-0">Welcome to Your Dashboard, {{ session['username'] }}!</h2>
                 </div>
                 <div class="card-body">
+                    {% if session.get('age') is not none %}
+                    <div class="alert alert-info" role="alert">
+                        Your age: <strong>{{ session['age'] }}</strong>
+                    </div>
+                    {% endif %}
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <div class="card text-center">
