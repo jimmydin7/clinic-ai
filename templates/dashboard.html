@@ -48,6 +48,46 @@
 
 
         <div class="col-md-8 mb-4">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-mint-green text-dark">
+                    <h5 class="mb-0">Available Health Tests</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="text-center">
+                                <div class="mb-3">
+                                    <i class="fas fa-dna fa-3x text-danger"></i>
+                                </div>
+                                <h6 class="mb-2">Cancer Risk Assessment</h6>
+                                <p class="text-muted small">Evaluate your cancer risk based on lifestyle and genetic factors</p>
+                                <a href="{{ url_for('cancer_test') }}" class="btn btn-outline-danger btn-sm">Take Test</a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="text-center">
+                                <div class="mb-3">
+                                    <i class="fas fa-tint fa-3x text-warning"></i>
+                                </div>
+                                <h6 class="mb-2">Diabetes Risk Assessment</h6>
+                                <p class="text-muted small">Check your diabetes risk with our predictive model</p>
+                                <a href="{{ url_for('diabetes_test') }}" class="btn btn-outline-warning btn-sm">Take Test</a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="text-center">
+                                <div class="mb-3">
+                                    <i class="fas fa-brain fa-3x text-info"></i>
+                                </div>
+                                <h6 class="mb-2">Mental Health Assessment</h6>
+                                <p class="text-muted small">Assess your mental health and well-being</p>
+                                <a href="{{ url_for('mental_health_test') }}" class="btn btn-outline-info btn-sm">Take Test</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-header bg-mint-green text-dark">
                     <h5 class="mb-0">Your Average Health Score</h5>
