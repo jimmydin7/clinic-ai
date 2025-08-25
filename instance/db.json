@@ -5,6 +5,12 @@
             "password": "dimitris",
             "birthday": "2010-09-07",
             "age": 14
+        },
+        {
+            "username": "katerinaki",
+            "password": "katerinaki",
+            "birthday": "2000-08-18",
+            "age": 25
         }
     ]
 }

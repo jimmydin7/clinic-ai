@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5 pt-5">
+<div class="container mt-5 pt-5 text-dark">
     <div class="row justify-content-center">
 
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-ucla-blue text-white">
-                    <h5 class="mb-0">Account</h5>
+        <div class="col-md-4 mb-4 d-flex flex-column" style="height: 100%;">
+
+            <div class="card shadow-sm border-0 mb-3 flex-fill">
+                <div class="card-header bg-ucla-blue">
+                    <h5 class="mb-0"><strong>Account</strong></h5>
                 </div>
                 <div class="card-body">
                     <p><strong>Name:</strong> {{ session['username'] }}</p>
@@ -18,17 +19,42 @@
                     </a>
                 </div>
             </div>
+
+            <div class="card shadow-sm mb-3 border-0 flex-fill">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><strong>Tests Data</strong></h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li>Cancer test(s) taken: <b>0</b></li>
+                        <li>Diabetes test(s) taken: <b>0</b></li>
+                        <li>Mental health test(s) taken: <b>0</b></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 mb-3 flex-fill">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><strong>Age Score</strong></h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li>Your health score is: <b>{{ session.get('health_score', 'N/A') }}</b></li>
+                        <li>You are <b>x%</b> better than people your age</li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
 
         <div class="col-md-8 mb-4">
-            <div class="card shadow-sm border-0">
+            <div class="card shadow-sm border-0 h-100">
                 <div class="card-header bg-mint-green text-dark">
                     <h5 class="mb-0">Your Average Health Score</h5>
                 </div>
                 <div class="card-body">
-                    <p class="lead">Score: <strong>{{ session.get('health_score', 'N/A') }}</strong></p>
-                    <canvas id="healthChart" height="150"></canvas>
+                    <p class="lead">Your Score: <strong>{{ session.get('health_score', 'N/A') }}</strong></p>
+                    <canvas id="healthChart" height="160"></canvas>
                 </div>
             </div>
         </div>
@@ -37,5 +63,62 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="static\js\dashboard.js"></script>
+<script>
+const ctx = document.getElementById('healthChart').getContext('2d');
+const datasets = [
+    {
+        label: 'Average Score by Age',
+        data: Array.from({length: 63}, () => Math.floor(Math.random() * 40 + 60)),
+        borderColor: '#406e8e',
+        backgroundColor: 'transparent',
+        borderWidth: 2,
+        tension: 0.3
+    }
+    {% if session.get('health_score') is not none %}
+    ,{
+        label: 'Your Score',
+        data: [{
+            x: {{ session['age'] }},
+            y: {{ session['health_score'] }}
+        }],
+        backgroundColor: '#ff3b3b',
+        pointRadius: 6,
+        pointHoverRadius: 8,
+        type: 'scatter'
+    }
+    {% endif %}
+];
+
+const healthChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: Array.from({length: 63}, (_, i) => i + 18),
+        datasets: datasets
+    },
+    options: {
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Age'
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Health Score'
+                },
+                beginAtZero: true,
+                max: 100
+            }
+        },
+        plugins: {
+            legend: {
+                display: true
+            }
+        }
+    }
+});
+</script>
+
 {% endblock %}
