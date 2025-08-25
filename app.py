@@ -72,5 +72,20 @@ def logout():
 def dashboard():
     return render_template('dashboard.html', session=session)
 
+@app.route('/cancer-test')
+@login_required
+def cancer_test():
+    return 'cancer test here'
+
+@app.route('/diabetes-test')
+@login_required
+def diabetes_test():
+    return 'diabetes test here'
+
+@app.route('/mental-health-test')
+@login_required
+def mental_health_test():
+    return 'mental health test here'
+
 if __name__ == '__main__':
     app.run(debug=True)
