@@ -12,3 +12,12 @@ def load_dataset():
 df = load_dataset()
 
 
+X = df.drop('Diagnosis', axis=1)
+
+Y = df['Diagnosis']
+
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
+
+model = RandomForestClassifier(random_state=42)
+model.fit(X_train, Y_train)
+
