@@ -77,6 +77,19 @@
           </div>
         </div>
 
+        <!-- BMI Classification Section -->
+        <div class="text-center mb-8">
+          <div class="inline-block p-6 rounded-2xl shadow-lg bg-white border-4" 
+               style="border-color: {{ bmi_color }};">
+            <div class="text-2xl font-bold mb-2" 
+                 style="color: {{ bmi_color }};">
+              BMI: {{ bmi_value }}
+            </div>
+            <div class="text-gray-600 text-lg">
+              {{ bmi_classification }}
+            </div>
+          </div>
+        </div>
 
         <div class="bg-gray-50 rounded-lg p-6 mb-8">
           <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">

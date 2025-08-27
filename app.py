@@ -6,6 +6,7 @@ from datetime import datetime, date
 import pandas as pd
 from models.cancer.cancer import predict as cancer_predict
 from utils.cancer_utils import cancer_vars
+from utils.cancer_utils.bmi_class import bmi_class
 
 app = Flask(__name__)
 app.secret_key = "dont-be-stupid-and-change-this-in-prod"
@@ -151,6 +152,16 @@ def cancer_summary():
     bmi = weight / (height_m ** 2)
     model_input['BMI'] = bmi
     
+    # Calculate BMI classification
+    bmi_classification, bmi_color = bmi_class(bmi)
+    
+    # Map BMI colors to CSS color values
+    bmi_css_color = {
+        'Green': '#10b981',      # green-500
+        'Orange': '#f59e0b',     # amber-500
+        'Red': '#ef4444'         # red-500
+    }.get(bmi_color, '#6b7280')  # default gray
+    
 
     feature_order = ['Age', 'Gender', 'BMI', 'Smoking', 'GeneticRisk', 'PhysicalActivity', 'AlcoholIntake', 'CancerHistory']
     ordered_input = {k: model_input[k] for k in feature_order}
@@ -187,7 +198,10 @@ def cancer_summary():
                          color=color, 
                          user_probability=probability if probability is not None else 0,
                          avg_probability=avg_probability,
-                         age_group=f"{age_group_start}-{age_group_end}")
+                         age_group=f"{age_group_start}-{age_group_end}",
+                         bmi_classification=bmi_classification,
+                         bmi_color=bmi_css_color,
+                         bmi_value=f"{bmi:.1f}")
 
 @app.route('/diabetes-test')
 @login_required
