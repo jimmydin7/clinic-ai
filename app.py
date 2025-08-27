@@ -5,7 +5,7 @@ from utils.images import images
 from datetime import datetime, date
 import pandas as pd
 from models.cancer.cancer import predict as cancer_predict
-from utils.cancer_utils.cancer_vars import cancer_questions, cancer_option_maps
+from utils.cancer_utils import cancer_vars
 
 app = Flask(__name__)
 app.secret_key = "dont-be-stupid-and-change-this-in-prod"
@@ -14,7 +14,8 @@ DB_PATH = 'instance\db.json'
 dbHandler = auth.DBController(db_path=DB_PATH)
 
 
-
+cancer_questions = cancer_vars.cancer_questions
+cancer_option_maps = cancer_vars.cancer_option_maps
 
 def login_required(f):
     @wraps(f)

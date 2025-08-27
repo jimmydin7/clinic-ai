@@ -1,41 +1,52 @@
-<!doctype html>
-<html>
-<head>
-  <title>Question {{ qid + 1 }}</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-  <div class="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
-    <h3 class="text-2xl font-semibold mb-6 text-gray-800">{{ question.label if question.label else question.name }}</h3>
-    
-    <form method="post" id="question-form" class="space-y-6">
-      {% if question.type == 'select' %}
-        <select name="answer" required class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-          {% for option in question.options %}
-            <option value="{{ loop.index0 }}">{{ option }}</option>
-          {% endfor %}
-        </select>
+{% extends "base.html" %}
 
-      {% elif question.type == 'scale' %}
-        <input type="hidden" name="answer" id="scale-value" required>
-        <div class="flex flex-wrap gap-3 justify-center">
-          {% for i in range(1, 11) %}
-            <div class="scale-box w-12 h-12 flex items-center justify-center rounded-md bg-gray-200 text-gray-700 font-bold cursor-pointer hover:bg-gray-300 transition"
-                 data-value="{{ i }}">
-              {{ i }}
-            </div>
-          {% endfor %}
-        </div>
+{% block title %}
+  Question {{ qid + 1 }}
+{% endblock %}
 
-      {% else %}
-        <input type="{{ question.type }}" name="answer" required autofocus
-               class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-      {% endif %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
+  <div class="card shadow-lg border-0 rounded-4 p-4" style="width: 100%; max-width: 600px;">
+    <div class="card-body">
+      <h3 class="card-title text-center text-primary fw-bold mb-4">
+        {{ question.label if question.label else question.name }}
+      </h3>
 
-      <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition">Next</button>
-    </form>
+      <form method="post" id="question-form">
+        {% if question.type == 'select' %}
+          <div class="mb-4">
+            <select name="answer" required class="form-select form-select-lg rounded-3 border-primary">
+              {% for option in question.options %}
+                <option value="{{ loop.index0 }}">{{ option }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+        {% elif question.type == 'scale' %}
+          <input type="hidden" name="answer" id="scale-value" required>
+          <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
+            {% for i in range(1, 11) %}
+              <button type="button" class="btn btn-outline-primary rounded-circle scale-box fw-bold"
+                      style="width: 48px; height: 48px;" data-value="{{ i }}">
+                {{ i }}
+              </button>
+            {% endfor %}
+          </div>
+
+        {% else %}
+          <div class="mb-4">
+            <input type="{{ question.type }}" name="answer" required autofocus
+                   class="form-control form-control-lg rounded-3 border-primary">
+          </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary w-100 py-2 rounded-3 fw-semibold">
+          Next
+        </button>
+      </form>
+    </div>
   </div>
+</div>
 
-  <script src="static\js\question.js"></script>
-</body>
-</html>
+<script src="static/js/question.js"></script>
+{% endblock %}
