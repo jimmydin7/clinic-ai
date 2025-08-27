@@ -95,7 +95,20 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html', session=session)
+    username = session['username']
+    test_results = dbHandler.get_user_test_results(username)
+    
+    cancer_results = [r for r in test_results if r['test_type'] == 'cancer']
+    diabetes_results = [r for r in test_results if r['test_type'] == 'diabetes']
+    mental_health_results = [r for r in test_results if r['test_type'] == 'mental_health']
+    
+    profile_data = {
+        'cancer_results': cancer_results,
+        'diabetes_results': diabetes_results,
+        'mental_health_results': mental_health_results,
+    }
+    
+    return render_template('dashboard.html', session=session, profile_data=profile_data)
 
 @app.route('/cancer-test')
 @login_required
@@ -152,15 +165,13 @@ def cancer_summary():
     bmi = weight / (height_m ** 2)
     model_input['BMI'] = bmi
     
-    # Calculate BMI classification
     bmi_classification, bmi_color = bmi_class(bmi)
     
-    # Map BMI colors to CSS color values
     bmi_css_color = {
-        'Green': '#10b981',      # green-500
-        'Orange': '#f59e0b',     # amber-500
-        'Red': '#ef4444'         # red-500
-    }.get(bmi_color, '#6b7280')  # default gray
+        'Green': '#10b981',
+        'Orange': '#f59e0b',
+        'Red': '#ef4444'
+    }.get(bmi_color, '#6b7280')
     
 
     feature_order = ['Age', 'Gender', 'BMI', 'Smoking', 'GeneticRisk', 'PhysicalActivity', 'AlcoholIntake', 'CancerHistory']
@@ -190,7 +201,24 @@ def cancer_summary():
     age_group_end = age_group_start + 9
     
 
-    avg_probability = 15.0 #demo
+    avg_probability = 15.0
+    
+    test_data = {
+        'bmi': round(bmi, 1),
+        'bmi_class': bmi_classification,
+        'smoking_times': answers.get('Smoking', 'Unknown'),
+        'alcohol_times': answers.get('AlcoholIntake', 'Unknown'),
+        'workout_times': answers.get('PhysicalActivity', 'Unknown'),
+        'cancer_risk': probability if probability is not None else 0,
+        'risk_level': 'High' if probability >= 80 else 'Medium' if probability >= 50 else 'Low',
+        'age': age,
+        'gender': answers.get('Gender', 'Unknown'),
+        'weight': weight,
+        'height': height_cm
+    }
+    
+    username = session['username']
+    dbHandler.save_test_result(username, 'cancer', test_data)
     
     return render_template('cancer-summary.html', 
                          answers=answers, 
@@ -202,6 +230,37 @@ def cancer_summary():
                          bmi_classification=bmi_classification,
                          bmi_color=bmi_css_color,
                          bmi_value=f"{bmi:.1f}")
+
+@app.route('/profile')
+@login_required
+def profile():
+    try:
+        username = session['username']
+        user = dbHandler.get_user(username)
+        test_results = dbHandler.get_user_test_results(username)
+        
+        if not user:
+            flash("User data not found.", "error")
+            return redirect(url_for('dashboard'))
+        
+        cancer_results = [r for r in test_results if r['test_type'] == 'cancer']
+        diabetes_results = [r for r in test_results if r['test_type'] == 'diabetes']
+        mental_health_results = [r for r in test_results if r['test_type'] == 'mental_health']
+        
+        profile_data = {
+            'username': username,
+            'age': user.get('age'),
+            'birthday': user.get('birthday'),
+            'cancer_results': cancer_results,
+            'diabetes_results': diabetes_results,
+            'mental_health_results': mental_health_results,
+            'total_tests': len(test_results)
+        }
+        
+        return render_template('profile.html', profile_data=profile_data)
+    except Exception as e:
+        flash(f"Error loading profile: {str(e)}", "error")
+        return redirect(url_for('dashboard'))
 
 @app.route('/diabetes-test')
 @login_required

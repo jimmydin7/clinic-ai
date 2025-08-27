@@ -1,7 +1,6 @@
-#goody json db controller
-
 import json
 import os
+from datetime import datetime
 
 class DBController:
     def __init__(self, db_path="instance/db.json"):
@@ -38,6 +37,8 @@ class DBController:
             user_record["birthday"] = birthday
         if age is not None:
             user_record["age"] = age
+        
+        user_record["test_results"] = []
 
         data["users"].append(user_record)
         self._save_db(data)
@@ -71,5 +72,34 @@ class DBController:
         data = self._load_db()
         for user in data.get("users", []):
             if user.get("username") == username:
+                if "test_results" not in user:
+                    user["test_results"] = []
+                    self._save_db(data)
                 return user
         return None
+
+    def save_test_result(self, username, test_type, test_data):
+        data = self._load_db()
+        
+        for user in data["users"]:
+            if user["username"] == username:
+                if "test_results" not in user:
+                    user["test_results"] = []
+                
+                test_result = {
+                    "test_type": test_type,
+                    "timestamp": datetime.now().isoformat(),
+                    "data": test_data
+                }
+                
+                user["test_results"].append(test_result)
+                self._save_db(data)
+                return True
+        
+        return False
+
+    def get_user_test_results(self, username):
+        user = self.get_user(username)
+        if user and "test_results" in user:
+            return user["test_results"]
+        return []

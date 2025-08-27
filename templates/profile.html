@@ -3,5 +3,195 @@
 {% block title %}Clinic AI - Profile{% endblock %}
 
 {% block content %}
-{{ profile_data }}
+<section class="py-5" style="margin-top: 80px; background: linear-gradient(135deg, #f8fafc, #e2e8f0); min-height: 100vh;">
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-12">
+        <div class="card shadow-lg border-0" style="border-radius: 20px; background: linear-gradient(135deg, #152337, #23395b);">
+          <div class="card-body p-5 text-center text-white">
+            <div class="mb-4">
+              <i class="fas fa-user-circle" style="font-size: 4rem; color: #2fdfb6;"></i>
+            </div>
+            <h1 class="display-4 fw-bold mb-2">{{ profile_data.username }}</h1>
+            <div class="row justify-content-center">
+              <div class="col-md-3">
+                <div class="d-flex align-items-center justify-content-center">
+                  <i class="fas fa-birthday-cake me-2" style="color: #2fdfb6;"></i>
+                  <span>Age: {{ profile_data.age or 'N/A' }}</span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="d-flex align-items-center justify-content-center">
+                  <i class="fas fa-clipboard-list me-2" style="color: #2fdfb6;"></i>
+                  <span>Total Tests: {{ profile_data.total_tests }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      {% if profile_data.cancer_results %}
+      <div class="col-12 mb-5">
+        <div class="card shadow-lg border-0" style="border-radius: 20px;">
+          <div class="card-header bg-primary text-white" style="border-radius: 20px 20px 0 0; border: none;">
+            <h3 class="mb-0">
+              <i class="fas fa-dna me-2"></i>
+              Cancer Test Results
+            </h3>
+          </div>
+          <div class="card-body p-4">
+            {% for result in profile_data.cancer_results %}
+            <div class="test-result-card mb-4 p-4" style="border-radius: 15px; background: linear-gradient(135deg, #f8fafc, #e2e8f0); border-left: 5px solid #2fdfb6;">
+              <div class="row align-items-center">
+                <div class="col-md-3">
+                  <div class="text-center">
+                    <div class="mb-2">
+                      <strong class="text-primary">Test Date:</strong><br>
+                      <small class="text-muted">{{ result.timestamp[:10] }}</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-9">
+                  <div class="row">
+                    <div class="col-md-3 mb-3">
+                      <div class="text-center p-3" style="background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div class="h4 mb-1 text-primary">{{ result.data.bmi }}</div>
+                        <small class="text-muted">BMI</small>
+                        <div class="mt-1">
+                          <span class="badge" style="background: {% if result.data.bmi_class == 'Normal' %}#10b981{% elif result.data.bmi_class == 'Overweight' %}#f59e0b{% else %}#ef4444{% endif %}; color: white;">
+                            {{ result.data.bmi_class }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <div class="text-center p-3" style="background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div class="h4 mb-1 text-warning">{{ result.data.smoking_times }}</div>
+                        <small class="text-muted">Smoking</small>
+                      </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <div class="text-center p-3" style="background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div class="h4 mb-1 text-info">{{ result.data.alcohol_times }}</div>
+                        <small class="text-muted">Alcohol</small>
+                      </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <div class="text-center p-3" style="background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div class="h4 mb-1 text-success">{{ result.data.workout_times }}</div>
+                        <small class="text-muted">Workout</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-12">
+                      <div class="d-flex justify-content-between align-items-center p-3" style="background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div>
+                          <strong>Cancer Risk:</strong> 
+                          <span class="badge fs-6" style="background: {% if result.data.risk_level == 'High' %}#ef4444{% elif result.data.risk_level == 'Medium' %}#f59e0b{% else %}#10b981{% endif %}; color: white;">
+                            {{ result.data.risk_level }} Risk
+                          </span>
+                        </div>
+                        <div class="text-end">
+                          <div class="h5 mb-0" style="color: {% if result.data.risk_level == 'High' %}#ef4444{% elif result.data.risk_level == 'Medium' %}#f59e0b{% else %}#10b981{% endif %};">
+                            {{ "%.1f"|format(result.data.cancer_risk) }}%
+                          </div>
+                          <small class="text-muted">Probability</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if profile_data.diabetes_results %}
+      <div class="col-12 mb-5">
+        <div class="card shadow-lg border-0" style="border-radius: 20px;">
+          <div class="card-header bg-success text-white" style="border-radius: 20px 20px 0 0; border: none;">
+            <h3 class="mb-0">
+              <i class="fas fa-tint me-2"></i>
+              Diabetes Test Results
+            </h3>
+          </div>
+          <div class="card-body p-4">
+            <p class="text-muted text-center">No diabetes tests completed yet.</p>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if profile_data.mental_health_results %}
+      <div class="col-12 mb-5">
+        <div class="card shadow-lg border-0" style="border-radius: 20px;">
+          <div class="card-header bg-info text-white" style="border-radius: 20px 20px 0 0; border: none;">
+            <h3 class="mb-0">
+              <i class="fas fa-brain me-2"></i>
+              Mental Health Test Results
+            </h3>
+          </div>
+          <div class="card-body p-4">
+            <p class="text-muted text-center">No mental health tests completed yet.</p>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if profile_data.total_tests == 0 %}
+      <div class="col-12">
+        <div class="card shadow-lg border-0 text-center" style="border-radius: 20px; background: linear-gradient(135deg, #f8fafc, #e2e8f0);">
+          <div class="card-body p-5">
+            <i class="fas fa-clipboard-list" style="font-size: 4rem; color: #cbd5e1; margin-bottom: 1rem;"></i>
+            <h3 class="text-muted mb-3">No Tests Completed Yet</h3>
+            <p class="text-muted mb-4">Start your health journey by taking one of our AI-powered health assessments.</p>
+            <div class="d-flex justify-content-center gap-3">
+              <a href="/cancer-test" class="btn btn-primary px-4 py-2" style="border-radius: 10px;">
+                <i class="fas fa-dna me-2"></i>Cancer Test
+              </a>
+              <a href="/diabetes-test" class="btn btn-success px-4 py-2" style="border-radius: 10px;">
+                <i class="fas fa-tint me-2"></i>Diabetes Test
+              </a>
+              <a href="/mental-health-test" class="btn btn-info px-4 py-2" style="border-radius: 10px;">
+                <i class="fas fa-brain me-2"></i>Mental Health Test
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+.test-result-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.test-result-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.5em 0.75em;
+}
+
+.card {
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+</style>
 {% endblock %}

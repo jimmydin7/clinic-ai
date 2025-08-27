@@ -25,10 +25,8 @@ def predict(patient_dataframe):
     cancer_prediction = model.predict(patient_dataframe)
 
     if cancer_prediction[0] == 1:
-        # this means cancer, now getting probability
         probability = model.predict_proba(patient_dataframe)[0][1] * 100
         return probability
     
     else:
-        # no cancer, patient clear!
         return None

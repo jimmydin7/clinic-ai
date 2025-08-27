@@ -1,0 +1,29 @@
+{
+    "users": [
+        {
+            "username": "nigger",
+            "password": "nigger",
+            "birthday": "2010-09-07",
+            "age": 14,
+            "test_results": [
+                {
+                    "test_type": "cancer",
+                    "timestamp": "2025-08-28T01:05:16.928747",
+                    "data": {
+                        "bmi": 31.1,
+                        "bmi_class": "Obese (Class I)",
+                        "smoking_times": "Yes",
+                        "alcohol_times": "0",
+                        "workout_times": "0",
+                        "cancer_risk": 93.0,
+                        "risk_level": "High",
+                        "age": 60,
+                        "gender": "Male",
+                        "weight": 70.0,
+                        "height": 150.0
+                    }
+                }
+            ]
+        }
+    ]
+}
