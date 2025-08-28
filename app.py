@@ -168,9 +168,9 @@ def cancer_summary():
     bmi_classification, bmi_color = bmi_class(bmi)
     
     bmi_css_color = {
-        'Green': '#10b981',
-        'Orange': '#f59e0b',
-        'Red': '#ef4444'
+        'Green': '#059669',
+        'Orange': '#d97706',
+        'Red': '#dc2626'
     }.get(bmi_color, '#6b7280')
     
 
@@ -230,37 +230,6 @@ def cancer_summary():
                          bmi_classification=bmi_classification,
                          bmi_color=bmi_css_color,
                          bmi_value=f"{bmi:.1f}")
-
-@app.route('/profile')
-@login_required
-def profile():
-    try:
-        username = session['username']
-        user = dbHandler.get_user(username)
-        test_results = dbHandler.get_user_test_results(username)
-        
-        if not user:
-            flash("User data not found.", "error")
-            return redirect(url_for('dashboard'))
-        
-        cancer_results = [r for r in test_results if r['test_type'] == 'cancer']
-        diabetes_results = [r for r in test_results if r['test_type'] == 'diabetes']
-        mental_health_results = [r for r in test_results if r['test_type'] == 'mental_health']
-        
-        profile_data = {
-            'username': username,
-            'age': user.get('age'),
-            'birthday': user.get('birthday'),
-            'cancer_results': cancer_results,
-            'diabetes_results': diabetes_results,
-            'mental_health_results': mental_health_results,
-            'total_tests': len(test_results)
-        }
-        
-        return render_template('profile.html', profile_data=profile_data)
-    except Exception as e:
-        flash(f"Error loading profile: {str(e)}", "error")
-        return redirect(url_for('dashboard'))
 
 @app.route('/diabetes-test')
 @login_required
