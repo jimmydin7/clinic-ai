@@ -8,6 +8,8 @@ from models.cancer.cancer import predict as cancer_predict
 from utils.cancer_utils import cancer_vars
 from utils.cancer_utils.bmi_class import bmi_class
 from utils.mental_health_vars import mental_health_questions, mental_health_scoring, MAX_SCORE, score_ranges
+from utils.diabetes_vars import diabetes_questions, diabetes_ranges
+from models.diabetes.diabetes import predict_diabetes
 
 app = Flask(__name__)
 app.secret_key = "dont-be-stupid-and-change-this-in-prod"
@@ -235,7 +237,88 @@ def cancer_summary():
 @app.route('/diabetes-test')
 @login_required
 def diabetes_test():
-    return 'diabetes test here'
+    session['diabetes_answers'] = {}
+    return redirect(url_for('diabetes_question', qid=0))
+
+@app.route('/diabetes-question/<int:qid>', methods=['GET', 'POST'])
+@login_required
+def diabetes_question(qid):
+    if qid >= len(diabetes_questions):
+        return redirect(url_for('diabetes_summary'))
+    
+    question = diabetes_questions[qid]
+    
+    if request.method == 'POST':
+        answer = request.form.get('answer')
+        session['diabetes_answers'][question['name']] = float(answer)
+        session.modified = True
+        return redirect(url_for('diabetes_question', qid=qid+1))
+    
+    return render_template('diabetes-question.html', question=question, qid=qid)
+
+@app.route('/diabetes-summary')
+@login_required
+def diabetes_summary():
+    answers = session.get('diabetes_answers', {})
+    
+    if not answers:
+        flash("No diabetes assessment data found. Please start the assessment.", "warning")
+        return redirect(url_for('diabetes_test'))
+    
+    model_input = {
+        'Age': answers.get('age', 0),
+        'Pregnancies': answers.get('pregnancies', 0),
+        'Glucose': answers.get('glucose', 0),
+        'BloodPressure': answers.get('blood_pressure', 0),
+        'SkinThickness': answers.get('skin_thickness', 0),
+        'Insulin': answers.get('insulin', 0),
+        'BMI': answers.get('bmi', 0),
+        'DiabetesPedigreeFunction': answers.get('diabetes_pedigree', 0)
+    }
+    
+    df = pd.DataFrame([model_input])
+    probability = predict_diabetes(model_input)
+    
+    if probability >= 70:
+        color = 'red-600'
+        result = f"High risk: {probability:.1f}% chance of diabetes."
+        risk_level = 'High'
+    elif probability >= 50:
+        color = 'orange-600'
+        result = f"Medium risk: {probability:.1f}% chance of diabetes."
+        risk_level = 'Medium'
+    else:
+        color = 'green-600'
+        result = f"Low risk: {probability:.1f}% chance of diabetes."
+        risk_level = 'Low'
+    
+    glucose_level = answers.get('glucose', 0)
+    bp_level = answers.get('blood_pressure', 0)
+    bmi_level = answers.get('bmi', 0)
+    
+    test_data = {
+        'glucose': glucose_level,
+        'blood_pressure': bp_level,
+        'bmi': bmi_level,
+        'diabetes_risk': probability,
+        'risk_level': risk_level,
+        'age': answers.get('age', 0),
+        'pregnancies': answers.get('pregnancies', 0),
+        'insulin': answers.get('insulin', 0)
+    }
+    
+    username = session['username']
+    dbHandler.save_test_result(username, 'diabetes', test_data)
+    
+    return render_template('diabetes-summary.html', 
+                         answers=answers, 
+                         result=result, 
+                         color=color, 
+                         probability=probability,
+                         risk_level=risk_level,
+                         glucose_level=glucose_level,
+                         bp_level=bp_level,
+                         bmi_level=bmi_level)
 
 @app.route('/mental-health-test')
 @login_required

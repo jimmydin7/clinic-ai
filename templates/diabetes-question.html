@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Diabetes Question {{ qid + 1 }}
+{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
+  <div class="card shadow-lg border-0 rounded-4 p-4" style="width: 100%; max-width: 600px;">
+    <div class="card-body">
+      <div class="text-center mb-4">
+        <div class="mb-3">
+          <i class="fas fa-tint fa-3x text-warning"></i>
+        </div>
+        <h6 class="text-muted mb-2">Diabetes Risk Assessment</h6>
+        <div class="progress mb-3" style="height: 8px; border-radius: 8px;">
+          <div class="progress-bar bg-warning" role="progressbar" 
+               style="width: {{ ((qid + 1) / 8) * 100 }}%; border-radius: 8px;"></div>
+        </div>
+        <small class="text-muted">Question {{ qid + 1 }} of 8</small>
+      </div>
+
+      <h3 class="card-title text-center text-primary fw-bold mb-4">
+        {{ question.label }}
+      </h3>
+
+      <form method="post" id="question-form">
+        <div class="mb-4">
+          <input type="number" name="answer" required autofocus
+                 class="form-control form-control-lg rounded-3 border-primary"
+                 min="{{ question.min }}" max="{{ question.max }}"
+                 {% if question.step %}step="{{ question.step }}"{% endif %}
+                 placeholder="Enter your answer">
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 py-2 rounded-3 fw-semibold">
+          {% if qid == 7 %}
+            Finish Assessment
+          {% else %}
+            Next Question
+          {% endif %}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="static/js/question.js"></script>
+{% endblock %}
