@@ -1,0 +1,35 @@
+{
+    "users": [
+        {
+            "username": "arca",
+            "password": "u2Hm1&KK3FbCZzOFI@Au",
+            "birthday": "2000-05-05",
+            "age": 25,
+            "test_results": [
+                {
+                    "test_type": "mental_health",
+                    "timestamp": "2025-08-30T00:15:05.210302",
+                    "data": {
+                        "total_score": 24,
+                        "percentage": 48.0,
+                        "level": "Fair",
+                        "max_score": 50,
+                        "answers": {
+                            "anxiety_frequency": "Sometimes",
+                            "appetite": "Decreased",
+                            "concentration": "Poor",
+                            "energy_levels": "Low",
+                            "mood_stability": "Somewhat Stable",
+                            "motivation": "Low",
+                            "self_worth": "Very Negative",
+                            "sleep_quality": "Fair (5-6 hours)",
+                            "social_connections": "Neutral",
+                            "stress_level": "Sometimes"
+                        },
+                        "timestamp": "2025-08-30T00:15:05.209228"
+                    }
+                }
+            ]
+        }
+    ]
+}
