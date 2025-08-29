@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block title %}Clinic AI - Mental Health Test Results{% endblock %}
+
+{% block content %}
+<section class="py-4" style="margin-top: 80px; background: linear-gradient(135deg, #f1f5f9, #e2e8f0); min-height: 100vh;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        
+        <div class="text-center mb-4">
+          <h1 class="h2 fw-bold text-dark mb-2">Your Mental Health Assessment Results</h1>
+          <p class="text-muted">Based on your responses to our comprehensive mental health questionnaire</p>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-md-6 mb-3">
+            <div class="card shadow border-0 h-100" style="border-radius: 15px;">
+              <div class="card-body p-4 text-center">
+                <div class="mb-3">
+                  <i class="fas fa-brain" style="font-size: 2rem; color: #2fdfb6;"></i>
+                </div>
+                <h4 class="h5 fw-bold mb-2 text-dark">Mental Health Score</h4>
+                <div class="h3 fw-bold mb-2" 
+                     style="color: {% if percentage >= 80 %}#059669{% elif percentage >= 60 %}#2563eb{% elif percentage >= 40 %}#ca8a04{% elif percentage >= 20 %}#ea580c{% else %}#dc2626{% endif %};">
+                  {{ "%.1f"|format(percentage) }}%
+                </div>
+                <div class="h6 mb-3">
+                  {% if percentage >= 80 %}
+                    <span class="badge bg-success fs-6">Excellent</span>
+                  {% elif percentage >= 60 %}
+                    <span class="badge bg-primary fs-6">Good</span>
+                  {% elif percentage >= 40 %}
+                    <span class="badge bg-warning fs-6">Fair</span>
+                  {% elif percentage >= 20 %}
+                    <span class="badge bg-warning fs-6">Poor</span>
+                  {% else %}
+                    <span class="badge bg-danger fs-6">Critical</span>
+                  {% endif %}
+                </div>
+                <div class="progress mb-2" style="height: 8px; border-radius: 8px;">
+                  <div class="progress-bar" role="progressbar" 
+                       style="width: {{ percentage }}%; 
+                              background: {% if percentage >= 80 %}#059669{% elif percentage >= 60 %}#2563eb{% elif percentage >= 40 %}#ca8a04{% elif percentage >= 20 %}#ea580c{% else %}#dc2626{% endif %}; border-radius: 8px;"></div>
+                </div>
+                <div class="text-muted">
+                  <small>Score: {{ total_score }}/{{ max_score }} points</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <div class="card shadow border-0 h-100" style="border-radius: 15px;">
+              <div class="card-body p-4 text-center">
+                <div class="mb-3">
+                  <i class="fas fa-chart-line" style="font-size: 2rem; color: #2fdfb6;"></i>
+                </div>
+                <h4 class="h5 fw-bold mb-2 text-dark">Overall Assessment</h4>
+                <div class="h3 fw-bold mb-2" 
+                     style="color: {% if percentage >= 80 %}#059669{% elif percentage >= 60 %}#2563eb{% elif percentage >= 40 %}#ca8a04{% elif percentage >= 20 %}#ea580c{% else %}#dc2626{% endif %};">
+                  {{ level }}
+                </div>
+                <div class="h6 mb-3 text-dark">Mental Health Status</div>
+                <div class="progress mb-2" style="height: 8px; border-radius: 8px;">
+                  <div class="progress-bar" role="progressbar" 
+                       style="width: {{ percentage }}%; 
+                              background: {% if percentage >= 80 %}#059669{% elif percentage >= 60 %}#2563eb{% elif percentage >= 40 %}#ca8a04{% elif percentage >= 20 %}#ea580c{% else %}#dc2626{% endif %}; border-radius: 8px;"></div>
+                </div>
+                <div class="text-muted">
+                  <small>Based on 10 key indicators</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="card shadow border-0" style="border-radius: 15px;">
+              <div class="card-header bg-primary text-white" style="border-radius: 15px 15px 0 0; border: none;">
+                <h5 class="mb-0">
+                  <i class="fas fa-info-circle me-2"></i>
+                  Assessment Summary
+                </h5>
+              </div>
+              <div class="card-body p-4">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <h6 class="fw-bold mb-3 text-dark">Your Responses:</h6>
+                    <ul class="list-unstyled">
+                      <li class="mb-2">
+                        <i class="fas fa-circle me-2" style="color: #2fdfb6; font-size: 0.5rem;"></i>
+                        <strong class="text-dark">Sleep Quality:</strong> {{ answers.get('sleep_quality', 'N/A') }}
+                      </li>
+                      <li class="mb-2">
+                        <i class="fas fa-circle me-2" style="color: #2fdfb6; font-size: 0.5rem;"></i>
+                        <strong class="text-dark">Stress Level:</strong> {{ answers.get('stress_level', 'N/A') }}
+                      </li>
+                      <li class="mb-2">
+                        <i class="fas fa-circle me-2" style="color: #2fdfb6; font-size: 0.5rem;"></i>
+                        <strong class="text-dark">Mood Stability:</strong> {{ answers.get('mood_stability', 'N/A') }}
+                      </li>
+                      <li class="mb-2">
+                        <i class="fas fa-circle me-2" style="color: #2fdfb6; font-size: 0.5rem;"></i>
+                        <strong class="text-dark">Social Connections:</strong> {{ answers.get('social_connections', 'N/A') }}
+                      </li>
+                      <li class="mb-2">
+                        <i class="fas fa-circle me-2" style="color: #2fdfb6; font-size: 0.5rem;"></i>
+                        <strong class="text-dark">Energy Levels:</strong> {{ answers.get('energy_levels', 'N/A') }}
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6 class="fw-bold mb-3 text-dark">Interpretation:</h6>
+                    {% if percentage >= 80 %}
+                      <div class="alert alert-success" style="border-radius: 12px;">
+                        <h6 class="fw-bold mb-2">✅ Excellent Mental Health</h6>
+                        <p class="mb-0 small">Your assessment indicates excellent mental well-being. Continue maintaining your positive habits and lifestyle choices.</p>
+                      </div>
+                    {% elif percentage >= 60 %}
+                      <div class="alert alert-primary" style="border-radius: 12px;">
+                        <h6 class="fw-bold mb-2">✅ Good Mental Health</h6>
+                        <p class="mb-0 small">Your assessment shows good mental health. Consider minor lifestyle adjustments to optimize your well-being.</p>
+                      </div>
+                    {% elif percentage >= 40 %}
+                      <div class="alert alert-warning" style="border-radius: 12px;">
+                        <h6 class="fw-bold mb-2">⚠️ Fair Mental Health</h6>
+                        <p class="mb-0 small">Your assessment indicates moderate mental health. Consider implementing stress management and self-care practices.</p>
+                      </div>
+                    {% elif percentage >= 20 %}
+                      <div class="alert alert-warning" style="border-radius: 12px;">
+                        <h6 class="fw-bold mb-2">⚠️ Poor Mental Health</h6>
+                        <p class="mb-0 small">Your assessment shows areas for improvement. Consider seeking support from mental health professionals.</p>
+                      </div>
+                    {% else %}
+                      <div class="alert alert-danger" style="border-radius: 12px;">
+                        <h6 class="fw-bold mb-2">⚠️ Critical Mental Health</h6>
+                        <p class="mb-0 small">Your assessment indicates significant concerns. Please consider seeking immediate professional mental health support.</p>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="card shadow border-0" style="border-radius: 15px;">
+              <div class="card-header bg-info text-white" style="border-radius: 15px 15px 0 0; border: none;">
+                <h5 class="mb-0">
+                  <i class="fas fa-chart-bar me-2"></i>
+                  Score Breakdown
+                </h5>
+              </div>
+              <div class="card-body p-4">
+                <div class="row align-items-center">
+                  <div class="col-md-6">
+                    <h6 class="fw-bold mb-3 text-dark">Your Score Analysis</h6>
+                    <p class="text-muted small">Based on 10 mental health indicators</p>
+                    <div class="mb-3">
+                      <div class="d-flex justify-content-between mb-1">
+                        <span class="text-dark">Your Score</span>
+                        <span class="fw-bold text-dark">{{ total_score }}/{{ max_score }}</span>
+                      </div>
+                      <div class="progress" style="height: 16px; border-radius: 10px;">
+                        <div class="progress-bar bg-primary" role="progressbar" 
+                             style="width: {{ percentage }}%; border-radius: 10px;"></div>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="d-flex justify-content-between mb-1">
+                        <span class="text-dark">Percentage</span>
+                        <span class="fw-bold text-dark">{{ "%.1f"|format(percentage) }}%</span>
+                      </div>
+                      <div class="progress" style="height: 16px; border-radius: 10px;">
+                        <div class="progress-bar bg-info" role="progressbar" 
+                             style="width: {{ percentage }}%; border-radius: 10px;"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 text-center">
+                    <div class="p-3" style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
+                      <h6 class="fw-bold mb-2 text-dark">Mental Health Scale</h6>
+                      <div class="d-flex justify-content-between text-muted small mb-2">
+                        <span>0%</span>
+                        <span>25%</span>
+                        <span>50%</span>
+                        <span>75%</span>
+                        <span>100%</span>
+                      </div>
+                      <div class="progress" style="height: 6px; border-radius: 8px;">
+                        <div class="progress-bar bg-danger" style="width: 20%; border-radius: 8px;"></div>
+                        <div class="progress-bar bg-warning" style="width: 20%; border-radius: 8px;"></div>
+                        <div class="progress-bar bg-warning" style="width: 20%; border-radius: 8px;"></div>
+                        <div class="progress-bar bg-primary" style="width: 20%; border-radius: 8px;"></div>
+                        <div class="progress-bar bg-success" style="width: 20%; border-radius: 8px;"></div>
+                      </div>
+                      <div class="d-flex justify-content-between text-muted small mt-2">
+                        <span>Critical</span>
+                        <span>Poor</span>
+                        <span>Fair</span>
+                        <span>Good</span>
+                        <span>Excellent</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center">
+          <div class="d-flex flex-column flex-md-row gap-3 justify-content-center">
+            <a href="/dashboard" class="btn btn-primary px-4 py-2" style="border-radius: 12px;">
+              <i class="fas fa-tachometer-alt me-2"></i>
+              Move to Dashboard →
+            </a>
+            <a href="/mental-health-test" class="btn btn-outline-secondary px-4 py-2" style="border-radius: 12px;">
+              <i class="fas fa-redo me-2"></i>
+              Take Test Again
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.progress-bar {
+  transition: width 0.6s ease;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.4em 0.8em;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Mental Health Question {{ qid + 1 }}
+{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
+  <div class="card shadow-lg border-0 rounded-4 p-4" style="width: 100%; max-width: 600px;">
+    <div class="card-body">
+      <div class="text-center mb-4">
+        <div class="mb-3">
+          <i class="fas fa-brain fa-3x text-info"></i>
+        </div>
+        <h6 class="text-muted mb-2">Mental Health Assessment</h6>
+        <div class="progress mb-3" style="height: 8px; border-radius: 8px;">
+          <div class="progress-bar bg-info" role="progressbar" 
+               style="width: {{ ((qid + 1) / 10) * 100 }}%; border-radius: 8px;"></div>
+        </div>
+        <small class="text-muted">Question {{ qid + 1 }} of 10</small>
+      </div>
+
+      <h3 class="card-title text-center text-primary fw-bold mb-4">
+        {{ question.label }}
+      </h3>
+
+      <form method="post" id="question-form">
+        {% if question.type == 'select' %}
+          <div class="mb-4">
+            <select name="answer" required class="form-select form-select-lg rounded-3 border-primary">
+              {% for option in question.options %}
+                <option value="{{ loop.index0 }}">{{ option }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary w-100 py-2 rounded-3 fw-semibold">
+          {% if qid == 9 %}
+            Finish Assessment
+          {% else %}
+            Next Question
+          {% endif %}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="static/js/question.js"></script>
+{% endblock %}

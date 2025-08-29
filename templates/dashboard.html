@@ -145,6 +145,51 @@
         </div>
     </div>
     {% endif %}
+
+    {% if profile_data and profile_data.mental_health_results %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-brain me-2"></i>
+                        Recent Mental Health Test Results
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% for result in profile_data.mental_health_results[-3:] %}
+                    <div class="row align-items-center mb-3 p-3" style="background: linear-gradient(135deg, #f8fafc, #e2e8f0); border-radius: 10px;">
+                        <div class="col-md-3">
+                            <small class="text-muted">Test Date:</small><br>
+                            <strong>{{ result.timestamp[:10] }}</strong>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="h5 mb-1" 
+                                 style="color: {% if result.data.percentage >= 80 %}#059669{% elif result.data.percentage >= 60 %}#2563eb{% elif result.data.percentage >= 40 %}#ca8a04{% elif result.data.percentage >= 20 %}#ea580c{% else %}#dc2626{% endif %};">
+                                {{ "%.1f"|format(result.data.percentage) }}%
+                            </div>
+                            <small class="text-muted">Mental Health Score</small>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="h5 mb-1" 
+                                 style="color: {% if result.data.percentage >= 80 %}#059669{% elif result.data.percentage >= 60 %}#2563eb{% elif result.data.percentage >= 40 %}#ca8a04{% elif result.data.percentage >= 20 %}#ea580c{% else %}#dc2626{% endif %};">
+                                {{ result.data.total_score }}/{{ result.data.max_score if result.data.max_score else 50 }}
+                            </div>
+                            <small class="text-muted">Raw Score</small>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <span class="badge" 
+                                  style="background: {% if result.data.percentage >= 80 %}#059669{% elif result.data.percentage >= 60 %}#2563eb{% elif result.data.percentage >= 40 %}#ca8a04{% elif result.data.percentage >= 20 %}#ea580c{% else %}#dc2626{% endif %}; color: white;">
+                                {{ result.data.level }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </div>
 
 

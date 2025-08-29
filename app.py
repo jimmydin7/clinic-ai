@@ -7,6 +7,7 @@ import pandas as pd
 from models.cancer.cancer import predict as cancer_predict
 from utils.cancer_utils import cancer_vars
 from utils.cancer_utils.bmi_class import bmi_class
+from utils.mental_health_vars import mental_health_questions, mental_health_scoring, MAX_SCORE, score_ranges
 
 app = Flask(__name__)
 app.secret_key = "dont-be-stupid-and-change-this-in-prod"
@@ -239,7 +240,89 @@ def diabetes_test():
 @app.route('/mental-health-test')
 @login_required
 def mental_health_test():
-    return 'mental health test here'
+    session['mental_health_answers'] = {}
+    return redirect(url_for('mental_health_question', qid=0))
+
+@app.route('/mental-health-question/<int:qid>', methods=['GET', 'POST'])
+@login_required
+def mental_health_question(qid):
+    if qid >= len(mental_health_questions):
+        return redirect(url_for('mental_health_summary'))
+    
+    question = mental_health_questions[qid]
+    
+    if request.method == 'POST':
+        answer = request.form.get('answer')
+        
+        if question['type'] == 'select':
+            answer_text = question['options'][int(answer)]
+            session['mental_health_answers'][question['name']] = answer_text
+        
+        session.modified = True
+        return redirect(url_for('mental_health_question', qid=qid+1))
+    
+    return render_template('mental-health-question.html', question=question, qid=qid)
+
+@app.route('/mental-health-summary')
+@login_required
+def mental_health_summary():
+    answers = session.get('mental_health_answers', {})
+    
+    if not answers:
+        flash("No mental health assessment data found. Please start the assessment.", "warning")
+        return redirect(url_for('mental_health_test'))
+    
+
+    total_score = 0
+    for question_name, answer in answers.items():
+        if question_name in mental_health_scoring:
+            total_score += mental_health_scoring[question_name][answer]
+    
+
+    percentage = (total_score / MAX_SCORE) * 100
+
+    if percentage >= 80:
+        color = 'green-600'
+        result = f"Excellent mental health: {percentage:.1f}%"
+        level = 'Excellent'
+    elif percentage >= 60:
+        color = 'blue-600'
+        result = f"Good mental health: {percentage:.1f}%"
+        level = 'Good'
+    elif percentage >= 40:
+        color = 'yellow-600'
+        result = f"Fair mental health: {percentage:.1f}%"
+        level = 'Fair'
+    elif percentage >= 20:
+        color = 'orange-600'
+        result = f"Poor mental health: {percentage:.1f}%"
+        level = 'Poor'
+    else:
+        color = 'red-600'
+        result = f"Critical mental health: {percentage:.1f}%"
+        level = 'Critical'
+    
+
+    test_data = {
+        'total_score': total_score,
+        'percentage': round(percentage, 1),
+        'level': level,
+        'max_score': MAX_SCORE,
+        'answers': answers,
+        'timestamp': datetime.now().isoformat()
+    }
+    
+    username = session['username']
+    dbHandler.save_test_result(username, 'mental_health', test_data)
+    
+    return render_template('mental-health-summary.html', 
+                         answers=answers, 
+                         result=result, 
+                         color=color, 
+                         percentage=percentage,
+                         total_score=total_score,
+                         max_score=MAX_SCORE,
+                         level=level)
 
 if __name__ == '__main__':
     app.run(debug=True)
