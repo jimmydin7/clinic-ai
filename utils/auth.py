@@ -7,9 +7,12 @@ class DBController:
         self.db_path = db_path
 
         if not os.path.exists(self.db_path):
-            os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
+            dir_path = os.path.dirname(self.db_path)
+            if dir_path:  # Only create directory if it exists
+                os.makedirs(dir_path, exist_ok=True)
             with open(self.db_path, "w") as f:
                 json.dump({"users": []}, f)
+
 
     def _load_db(self):
         try:
