@@ -408,4 +408,4 @@ def mental_health_summary():
                          level=level)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=4646, host='0.0.0.0')
